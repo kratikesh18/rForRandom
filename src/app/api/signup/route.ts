@@ -8,13 +8,21 @@ export async function POST(req: Request) {
   try {
     const { username, email, password } = await req.json();
     console.log(username, email, password);
-    //checking if any user and email verified
+
+    //checking if the username with this username is already exist or verified
     const existingUserVerifiedByUsername = await UserModel.findOne({
       username,
       isUserVerified: true,
     });
+
     if (existingUserVerifiedByUsername) {
-      return { success: false, message: "username already taken" };
+      return Response.json(
+        {
+          success: false,
+          message: "username already taken",
+        },
+        { status: 400 }
+      );
     }
 
     const existingUserByEmail = await UserModel.findOne({ email });

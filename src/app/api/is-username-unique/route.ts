@@ -9,7 +9,8 @@ const UsenameQuerySchema = z.object({
 });
 
 export async function GET(request: Request) {
-  dbConnect();
+  
+  await dbConnect();
   try {
     const { searchParams } = new URL(request.url);
 
@@ -19,7 +20,6 @@ export async function GET(request: Request) {
 
     // validating with zod
     const result = UsenameQuerySchema.safeParse(queryParam);
-    console.log(result);
 
     if (!result.success) {
       const usernameError = result.error.format().username?._errors || [];
@@ -35,7 +35,8 @@ export async function GET(request: Request) {
       );
     }
     const { username } = result.data;
-    
+
+    // here we are checking if the username matches to the validation and not exist in the DB
     const existingVerifiedUser = await UserModel.findOne({
       username,
       isUserVerified: true,
@@ -50,6 +51,7 @@ export async function GET(request: Request) {
         { status: 400 }
       );
     }
+
     return Response.json(
       {
         success: true,
