@@ -55,7 +55,7 @@ export async function GET(request: Request) {
     return Response.json(
       {
         success: true,
-        message: "Username uniquely checked",
+        message: "Username is available",
       },
       { status: 200 }
     );
