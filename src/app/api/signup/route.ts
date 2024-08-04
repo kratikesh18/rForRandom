@@ -49,6 +49,7 @@ export async function POST(req: Request) {
       const hanshedPassword = await bcrypt.hash(password, 10);
       const expriryDate = new Date();
       expriryDate.setHours(expriryDate.getHours() + 1);
+
       const newUser = new UserModel({
         username,
         email,
@@ -69,6 +70,7 @@ export async function POST(req: Request) {
       username,
       verifyCode
     );
+
     console.log(emailResponse);
     if (!emailResponse.success) {
       return Response.json(
@@ -85,6 +87,9 @@ export async function POST(req: Request) {
     );
   } catch (error) {
     console.error("Error registering the user", error);
-    return { success: false, message: "Error registering user" };
+    return Response.json(
+      { success: false, message: "Error registering user" },
+      { status: 404 }
+    );
   }
 }
