@@ -3,13 +3,10 @@ import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { useDebounceValue, useDebounceCallback } from "usehooks-ts";
+import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
-import { signupSchema } from "@/schemas/signUpSchema";
-import axios, { AxiosError } from "axios";
-import { ApiResponse } from "@/types/ApiResponse";
+
 import {
   Form,
   FormControl,
@@ -20,7 +17,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
+
 import { signInSchema } from "@/schemas/signInSchema";
 import { signIn } from "next-auth/react";
 
@@ -37,6 +34,7 @@ const SignInPage = () => {
   });
 
   const onSubmit = async (data: z.infer<typeof signInSchema>) => {
+    setIsSubmitting(true);
     const result = await signIn("credentials", {
       redirect: false,
       identifier: data.identifier,
@@ -60,6 +58,7 @@ const SignInPage = () => {
     if (result?.url) {
       router.replace(`/dashboard`);
     }
+    setIsSubmitting(false);
   };
 
   return (
@@ -115,12 +114,12 @@ const SignInPage = () => {
         </Form>
         <div>
           <p>
-            Already a member?
+            Not a member?
             <Link
-              href={"/sign-in"}
+              href={"/sign-up"}
               className="text-blue-600 hover:text-blue-800"
             >
-              Sign in
+              Sign up
             </Link>
           </p>
         </div>
